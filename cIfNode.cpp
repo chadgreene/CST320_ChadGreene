@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Author: Chad Greene
- * Lab: Lab 6 Calculate node sizes and offsets
- * Date: 3/4/15
+ * Lab: Lab 7 Generate Code
+ * Date: 3/14/15
  * 
  * Purpose: Build an abstract syntax tree by using Bison/Lex to parse a source
  * file into appropriate nodes
@@ -26,9 +26,30 @@ string cIfNode::toString()
 
 int cIfNode::CalculateSize(int offset)
 {
-    m_expr->CalculateSize(offset);
-    m_stmt1->CalculateSize(offset);
+    if(m_expr != nullptr)
+        m_expr->CalculateSize(offset);
+    if(m_stmt1 != nullptr)
+        m_stmt1->CalculateSize(offset);
+    if(m_stmt2 != nullptr)
     m_stmt2->CalculateSize(offset);
     
     return offset;
+}
+
+void cIfNode::GenerateCode()
+{
+    string elseLbl = gen->GenerateLabel();
+    string endLbl = gen->GenerateLabel();
+    gen->EmitString("if(!");
+    m_expr->GenerateCode();
+    gen->EmitString(") goto " + elseLbl + ";\n");
+    if(m_stmt1 != nullptr)
+    {
+        m_stmt1->GenerateCode();
+        gen->EmitString("goto " + endLbl + ";\n");
+    }
+    gen->EmitString(elseLbl + ":\n");
+    if(m_stmt2 != nullptr)
+        m_stmt2->GenerateCode();
+    gen->EmitString(endLbl + ":\n");
 }

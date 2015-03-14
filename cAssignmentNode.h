@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Author: Chad Greene
- * Lab: Lab 6 Calculate node sizes and offsets
- * Date: 3/4/15
+ * Lab: Lab 7 Generate Code
+ * Date: 3/14/15
  * 
  * Purpose: Build an abstract syntax tree by using Bison/Lex to parse a source
  * file into appropriate nodes
@@ -12,6 +12,7 @@
 #include "ExprNode.h"
 #include "cVarRef.h"
 #include "IntExpr.h"
+#include "cFuncCall.h"
 
 class cAssignmentNode : public cStmtNode
 {
@@ -21,6 +22,8 @@ class cAssignmentNode : public cStmtNode
         bool CanAssign();
         bool CharInRange(ExprNode* node = nullptr);
         int CalculateSize(int offset);
+        void GenerateCode();
+        string GetType();
     
     private:
         cVarRef* m_lhs;

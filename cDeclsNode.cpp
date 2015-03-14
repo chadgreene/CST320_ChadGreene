@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Author: Chad Greene
- * Lab: Lab 6 Calculate node sizes and offsets
- * Date: 3/4/15
+ * Lab: Lab 7 Generate Code
+ * Date: 3/14/15
  * 
  * Purpose: Build an abstract syntax tree by using Bison/Lex to parse a source
  * file into appropriate nodes
@@ -35,8 +35,12 @@ int cDeclsNode::CalculateSize(int offset)
 {
     m_offset = offset;
     for(auto &decl : m_decls)
-        m_offset = decl->CalculateSize(WordAlign(m_offset));
-        
+    {
+        if(decl->GetBaseType() == "char")
+            m_offset = decl->CalculateSize(m_offset);
+        else
+            m_offset = decl->CalculateSize(WordAlign(m_offset));
+    }   
     return m_offset;
 }
 
@@ -74,4 +78,10 @@ int cDeclsNode::FindSymbolOffset(cSymbol* symbol)
     }
     
     return retVal;
+}
+
+void cDeclsNode::GenerateCode()
+{
+    for(auto & decl : m_decls)
+        decl->GenerateCode();
 }

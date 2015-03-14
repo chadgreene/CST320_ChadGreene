@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Author: Chad Greene
- * Lab: Lab 6 Calculate node sizes and offsets
- * Date: 3/4/15
+ * Lab: Lab 7 Generate Code
+ * Date: 3/14/15
  * 
  * Purpose: Build an abstract syntax tree by using Bison/Lex to parse a source
  * file into appropriate nodes
@@ -20,6 +20,22 @@ string cWhileNode::toString()
 int cWhileNode::CalculateSize(int offset)
 {
     m_expr->CalculateSize(offset);
+    if(m_stmt != nullptr)
+        m_stmt->CalculateSize(offset);
     
     return offset;
+}
+
+void cWhileNode::GenerateCode()
+{
+    string loopLbl = gen->GenerateLabel();
+    string endLbl = gen->GenerateLabel();
+    gen->EmitString(loopLbl + ":\n");
+    gen->EmitString("if(!");
+    m_expr->GenerateCode();
+    gen->EmitString(") goto " + endLbl + ";\n");
+    m_stmt->GenerateCode();
+    gen->EmitString("goto " + loopLbl + ";\n");
+    gen->EmitString(endLbl + ":\n");
+    
 }

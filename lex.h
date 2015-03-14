@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Author: Chad Greene
- * Lab: Lab 6 Calculate node sizes and offsets
- * Date: 3/4/15
+ * Lab: Lab 7 Generate Code
+ * Date: 3/14/15
  * 
  * Purpose: Build an abstract syntax tree by using Bison/Lex to parse a source
  * file into appropriate nodes
@@ -39,6 +39,7 @@
 #include "cFuncCall.h"
 #include "cArrayDecl.h"
 #include "langparse.h"
+#include "codegen.h"
 
 extern char *yytext;
 extern int yylineno;
@@ -47,4 +48,4 @@ extern FILE *yyin;          // input file for lexer
 extern int yyparse();
 extern int yylex();
 extern int yynerrs;
-
+extern codegen* gen;

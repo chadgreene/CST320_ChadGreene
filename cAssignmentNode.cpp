@@ -54,3 +54,40 @@ int cAssignmentNode::CalculateSize(int offset)
     
     return offset;
 }
+
+void cAssignmentNode::GenerateCode()
+{
+    int offset = m_lhs->GetCalculatedOffset();
+    cFuncCall* func = nullptr;
+    try
+    {
+        func = dynamic_cast<cFuncCall*>(m_rhs);
+    }
+    catch(int e)
+    {}
+    
+    if(func != nullptr)
+        m_rhs->GenerateCode();
+        
+    if(m_lhs->GetBaseType() == "float")
+        gen->EmitString("FLOAT_VAL(Frame_Pointer + " + std::to_string(offset) + ") = ");
+    else
+        gen->EmitString("INT_VAL(Frame_Pointer + "+ std::to_string(offset) + ") = ");
+    
+    if(func != nullptr)
+    {
+        if(func->GetBaseType() == "float")
+            gen->EmitString("Temp_F");
+        else
+            gen->EmitString("Temp");
+    }
+    else
+        m_rhs->GenerateCode();
+        
+    gen->EmitString(";\n");
+}
+
+string cAssignmentNode::GetType()
+{
+    return m_lhs->GetBaseType();
+}

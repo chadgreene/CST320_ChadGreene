@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Author: Chad Greene
- * Lab: Lab 6 Calculate node sizes and offsets
- * Date: 3/4/15
+ * Lab: Lab 7 Generate Code
+ * Date: 3/14/15
  * 
  * Purpose: Build an abstract syntax tree by using Bison/Lex to parse a source
  * file into appropriate nodes
@@ -20,4 +20,9 @@ string cParamSpec::toString()
 int cParamSpec::CalculateSize(int offset)
 {
     return m_param->CalculateSize(offset);
+}
+
+void cParamSpec::GenerateCode()
+{
+    m_param->GenerateCode();
 }

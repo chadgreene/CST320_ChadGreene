@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Author: Chad Greene
- * Lab: Lab 6 Calculate node sizes and offsets
- * Date: 3/4/15
+ * Lab: Lab 7 Generate Code
+ * Date: 3/14/15
  * 
  * Purpose: Build an abstract syntax tree by using Bison/Lex to parse a source
  * file into appropriate nodes
@@ -12,7 +12,6 @@
 #include "ExprNode.h"
 #include "cStructDecl.h"
 #include "cSymbolTable.h"
-//#include "cDeclNode.h"
 
 extern cSymbolTable* symbolTableRoot;
 
@@ -30,6 +29,9 @@ class cVarRef : public ExprNode
         string GetBaseType();
         string GetSymbol();
         int CalculateSize(int offset);
+        void GenerateCode();
+        double GetValue();
+       
     
     private:
         list<VarPart*> m_parts;

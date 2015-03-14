@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Author: Chad Greene
- * Lab: Lab 6 Calculate node sizes and offsets
- * Date: 3/4/15
+ * Lab: Lab 7 Generate Code
+ * Date: 3/14/15
  * 
  * Purpose: Build an abstract syntax tree by using Bison/Lex to parse a source
  * file into appropriate nodes
@@ -10,7 +10,11 @@
 
 IntExpr::IntExpr(int val)
     :m_val(val)
-{}
+{
+   
+    m_size = 4;
+    m_offset = -1;
+}
 
 string IntExpr::toString()
 {
@@ -27,4 +31,14 @@ string IntExpr::GetType()
 string IntExpr::GetBaseType()
 {
     return GetType();
+}
+
+void IntExpr::GenerateCode()
+{
+    gen->EmitString(std::to_string(m_val));
+}
+
+double IntExpr::GetValue()
+{
+    return m_val;
 }

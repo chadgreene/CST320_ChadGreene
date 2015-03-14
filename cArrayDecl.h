@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Author: Chad Greene
- * Lab: Lab 6 Calculate node sizes and offsets
- * Date: 3/4/15
+ * Lab: Lab 7 Generate Code
+ * Date: 3/14/15
  * 
  * Purpose: Build an abstract syntax tree by using Bison/Lex to parse a source
  * file into appropriate nodes
@@ -19,7 +19,8 @@ class cArrayDecl : public cDeclNode
         string toString();
         int CalculateSize(int offset);
         int GetSize();
-        
+        string GetBaseType();
+        void GenerateCode();
     
     private:
         cSymbol* m_typeId;

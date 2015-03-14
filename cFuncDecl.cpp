@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Author: Chad Greene
- * Lab: Lab 6 Calculate node sizes and offsets
- * Date: 3/4/15
+ * Lab: Lab 7 Generate Code
+ * Date: 3/14/15
  * 
  * Purpose: Build an abstract syntax tree by using Bison/Lex to parse a source
  * file into appropriate nodes
@@ -9,7 +9,7 @@
 #include "cFuncDecl.h"
 
 cFuncDecl::cFuncDecl(cSymbol* header, cParamsSpec* params)
-    :m_header(header), m_params(params), m_decls(nullptr), m_stmts(nullptr)
+    :m_header(header), m_params(params), m_decls(nullptr), m_stmts(nullptr), m_paramSize(0)
 {
     m_size = -1;
     m_offset = -1;
@@ -48,17 +48,16 @@ void cFuncDecl::SetDecls(cDeclsNode* decls)
 
 int cFuncDecl::CalculateSize(int offset)
 {
-    int params = 0;
     m_offset = 0;
     
     if(m_params != nullptr)
-       params = m_params->CalculateSize(m_offset);
+       m_paramSize = m_params->CalculateSize(m_offset);
     if(m_decls != nullptr)
-        m_offset = m_decls->CalculateSize(params);
+        m_offset = m_decls->CalculateSize(m_paramSize);
     if(m_stmts != nullptr)
         m_offset = m_stmts->CalculateSize(m_offset);
   
-    m_size = m_offset - params;
+    m_size = (m_offset == 0) ? m_offset : m_offset - m_paramSize;
 
     return offset;
 }
@@ -66,4 +65,27 @@ int cFuncDecl::CalculateSize(int offset)
 int cFuncDecl::GetSize()
 {
     return m_header->GetSize();
+}
+
+int cFuncDecl::GetParamsSize()
+{
+    return m_paramSize;
+}
+
+string cFuncDecl::GetBaseType()
+{
+    return m_header->GetBaseType();
+}
+
+void cFuncDecl::GenerateCode()
+{
+    gen->StartFunctionOutput();
+    gen->EmitString("int " + m_header->GetSymbol() + "()\n{\n");
+    if(m_decls != nullptr)
+        m_decls->GenerateCode();
+    if(m_stmts != nullptr)
+        m_stmts->GenerateCode();
+    gen->ReduceStack(m_size + m_paramSize);
+    gen->EmitString("}\n");
+    gen->EndFunctionOutput();
 }

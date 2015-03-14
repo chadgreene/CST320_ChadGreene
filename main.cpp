@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Author: Chad Greene
- * Lab: Lab 6 Calculate node sizes and offsets
- * Date: 3/4/15
+ * Lab: Lab 7 Generate Code
+ * Date: 3/14/15
  * 
  * Purpose: Build an abstract syntax tree by using Bison/Lex to parse a source
  * file into appropriate nodes
@@ -15,24 +15,24 @@
 
 extern cAstNode *yyast_root;
 cSymbolTable * symbolTableRoot;
-
+codegen * gen;
 int main(int argc, char **argv)
 {
     symbolTableRoot = cSymbolTable::GetInstance();
-   
+    gen = new codegen();
     std::cout << "Chad Greene" << std::endl;
    
     const char *outfile_name;
     int result = 0;
     
-    std::streambuf *cout_buf = std::cout.rdbuf();
+    //std::streambuf *cout_buf = std::cout.rdbuf();
 
     if (argc > 1)
     {
         yyin = fopen(argv[1], "r");
         if (yyin == NULL)
         {
-            std::cerr << "ERROR: Unable to open file " << argv[1] << "\n";
+            std::cerr << "ERROR: Unable to open file " << argv[1] << std::endl;
             exit(-1);
         }
     }
@@ -47,10 +47,10 @@ int main(int argc, char **argv)
     std::ofstream output(outfile_name);
     if (!output.is_open())
     {
-        std::cerr << "ERROR: Unable to open file " << outfile_name << "\n";
+        std::cerr << "ERROR: Unable to open file " << outfile_name << std::endl;
         exit(-1);
     }
-    std::cout.rdbuf(output.rdbuf());
+    //std::cout.rdbuf(output.rdbuf());
 
     result = yyparse();
     
@@ -62,13 +62,16 @@ int main(int argc, char **argv)
             //output << yyast_root->toString() << std::endl;
             yyast_root->CalculateSize(0);
             output << yyast_root->toString() << std::endl;
+            gen->InitOutput("langout.c");
+            yyast_root->GenerateCode();
+            gen->FinalizeOutput();
         } else {
-            output << std::to_string(yynerrs) <<  " Errors in compile\n";
+            std::cerr << std::to_string(yynerrs) <<  " Errors in compile" << std::endl;
         }
     }
 
     output.close();
-    std::cout.rdbuf(cout_buf);
+    //std::cerr.rdbuf(cout_buf);
     return result;
    
 }

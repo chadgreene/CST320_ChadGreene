@@ -1,5 +1,6 @@
 COPTS=-Wall -g -c  -O0 -std=c++0x -Wno-reorder
 OBJS=main.o \
+	 codegen.o \
 	 langlex.o \
 	 cSymbolTable.o \
 	 cSymbol.o \
@@ -39,6 +40,7 @@ clean:
 	rm -f langparse.h
 	rm -f lang
 	rm -f out
+	rm -f a.out
 
 .cpp.o:
 	g++ $(COPTS) $? -o $@

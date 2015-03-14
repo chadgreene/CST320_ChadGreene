@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Author: Chad Greene
- * Lab: Lab 6 Calculate node sizes and offsets
- * Date: 3/4/15
+ * Lab: Lab 7 Generate Code
+ * Date: 3/14/15
  * 
  * Purpose: Build an abstract syntax tree by using Bison/Lex to parse a source
  * file into appropriate nodes
@@ -72,4 +72,15 @@ int cStructDecl::GetSize()
 int cStructDecl::FindSymbolOffset(cSymbol* symbol)
 {
     return m_decls->FindSymbolOffset(symbol);
+}
+
+string cStructDecl::GetBaseType()
+{
+    return m_identifier->GetBaseType();
+}
+
+void cStructDecl::GenerateCode()
+{
+    if(m_decls != nullptr)
+        m_decls->GenerateCode();
 }
